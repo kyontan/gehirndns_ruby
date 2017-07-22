@@ -1,0 +1,25 @@
+AsciiComments:
+  Enabled: false
+Documentation:
+  Enabled: false
+LineLength:
+  Enabled: false
+PercentLiteralDelimiters:
+  Enabled: false
+ClassLength:
+  Max: 200
+MethodLength:
+  Max: 20
+Metrics/AbcSize:
+  Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+AllCops:
+  Exclude:
+    - 'Rakefile'
+    - 'bin/rake'
+    - 'vendor/**/*'
+    - 'doc/**/*'
+    - 'coverage/**/*'
+    - 'tmp/**/*'
+  TargetRubyVersion: 2.4
