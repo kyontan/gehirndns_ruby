@@ -6,6 +6,7 @@ require 'json'
 require 'gehirn_dns/resource'
 require 'gehirn_dns/clients/preset'
 require 'gehirn_dns/clients/record'
+require 'gehirn_dns/clients/record_set'
 require 'gehirn_dns/clients/zone'
 require 'gehirn_dns/clients/version'
 
