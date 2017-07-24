@@ -18,9 +18,13 @@ module GehirnDns
       record_sets(name: name, type: type).first
     end
 
-    def clone(name:)
-      response = http_post '../', name: name
+    def create(name:, base: nil)
+      response = http_post '../', { name: name, base: base }.compact
       Version.new(response, client: @client, base_path: resource_path + '../../')
+    end
+
+    def clone(name:)
+      create(name: name, base: @id)
     end
 
     def delete
@@ -28,20 +32,26 @@ module GehirnDns
     end
 
     def activate!
-      migrate
+      migrate(name: nil, applied_at: nil)
+    end
+
+    def <<(record_set)
+      raise ArgumentError unless record_set.is_a? RecordSet
+      record_set.version = self
     end
 
     alias migrate! activate!
 
     # if prev version is nil, the latest version will set
-    def migrate(name: nil, applied_at: nil)
+    def migrate(name:, applied_at:)
       payload = {
         applied_at: applied_at ? applied_at.getutc.strftime('%FT%TZ') : nil,
         name: name,
         next_version_id: @id
       }.compact
 
-      http_post '../../presets', payload
+      response = http_post '../../presets', payload
+      Preset.new(response, client: @client, base_path: resource_path + '../../')
     end
 
     alias create_migration migrate
