@@ -42,6 +42,10 @@ module GehirnDns
       @base_uri = ::URI.parse(base_uri)
     end
 
+    def inspect
+      %Q(#<#{self.class}:#{object_id} @base_uri=#{@base_uri.inspect}, @secret=<HIDDEN>, @token=<HIDDEN>, @user_agent="#{@user_agent.inspect}">)
+    end
+
     private
 
     def execute(method, path, body = nil)
