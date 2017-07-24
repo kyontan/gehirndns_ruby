@@ -4,6 +4,12 @@ module GehirnDns
   class Error < StandardError
   end
 
+  class ValidationError < Error
+  end
+
+  class UnrequestableError < Error
+  end
+
   class RequestError < Error
     attr_reader :path, :body
 

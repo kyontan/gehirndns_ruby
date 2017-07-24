@@ -5,6 +5,8 @@ require 'pathname'
 
 module GehirnDns
   class Resource
+    attr_reader :client
+
     def initialize(attrs = {}, client:, base_path: '')
       attrs.each do |key, value|
         if key.to_s.end_with? '_at'

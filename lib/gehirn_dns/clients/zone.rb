@@ -24,8 +24,12 @@ module GehirnDns
       Version.new(response, client: @client, base_path: resource_path)
     end
 
-    def record_sets
-      current_version.record_sets
+    def current_record_sets(**args)
+      current_version.record_sets(**args)
+    end
+
+    def current_record_set(**args)
+      current_version.record_set(**args)
     end
 
     def versions

@@ -1,95 +1,83 @@
 # frozen_string_literal: true
 
 module GehirnDns
-  class RecordSet < Resource
-    attr_reader :id, :type, :enable_alias, :editable
-    attr_accessor :name, :alias_to, :ttl, :records
-
-    include Enumerable
-
-    def initialize(record_set, editable: true, client:, base_path: '')
-      @id = record_set[:id]
-      @name = record_set[:name]
-      @type = record_set[:type].upcase.to_sym
-      @ttl = record_set[:ttl]
-      @enable_alias = record_set[:enable_alias]
-      @editable = editable # API can ignore it
-
-      if @enable_alias
-        @alias_to = record_set[:alias_to]
-      else
-        @records = record_set[:records].map { |r| Record.new(r, record_set: self) }
-      end
-
-      super(client: client, base_path: base_path)
-    end
-
-    def each
-      @record_set.each { |r| yield r }
-    end
-
-    def resource_path
-      @base_path + plulal_name
-    end
-
-    def name=(name)
-      @name = name
-      update
-    end
-
-    def alias_to=(alias_to)
-      @alias_to = alias_to
-      @enable_alias = true
-      update
-    end
-
-    def ttl=(ttl)
-      @ttl = ttl
-      update
-    end
-
-    # append record
-    def <<(record)
-      # TODO
-    end
-
-    def records=(records)
-      @records = records.map { |r| Record.new(r) }
-      update
-    end
-
-    private
-
-    def update
-      # TODO:
-    end
-  end
-
   class Record
+    attr_reader :id
+    attr_accessor :record_set
+
+    RECORD_TYPES = %i(A AAAA CNAME MX NS SRV TXT).freeze
+    RECORD_FIELDS = {
+      A:     %i(address),
+      AAAA:  %i(address),
+      CNAME: %i(cname),
+      MX:    %i(prio exchange),
+      NS:    %i(nsdname),
+      SRV:   %i(target port weight),
+      TXT:   %i(data),
+    }.freeze
+
     def initialize(record, record_set: nil)
       @record_set = record_set
 
-      required_attribtues.each do |key|
+      attribute_names(type: record_set&.type).each do |key|
         instance_variable_set(:"@#{key}", record[key])
-        singleton_class.class_eval { attr_accessor key }
-
-        # TODO: define setter
       end
+
+      redefine_attributes
+    end
+
+    def record_set=(record_set)
+      @record_set = record_set
+
+      redefine_attributes
+
+      @record_set << self
+    end
+
+    def to_h
+      attributes
+    end
+
+    def attributes(type: @record_set&.type)
+      Hash[attribute_names(type: type).map{|attr| [attr, instance_variable_get(:"@#{attr}")] }]
+    end
+
+    def attribute_names(type: @record_set&.type)
+      return RECORD_FIELDS.values.flatten unless RECORD_FIELDS.has_key? type
+      RECORD_FIELDS[type]
+    end
+
+    def delete
+      @record_set.delete_record(self)
     end
 
     private
 
-    # rubocop:disable Metrics/CyclomaticComplexity
-    def required_attribtues
-      case @record_set&.type
-      when :A, :AAAA then %i(address)
-      when :CNAME    then %i(cname)
-      when :MX       then %i(prio exchange)
-      when :NS       then %i(nsdname)
-      when :SRV      then %i(target port weight)
-      when :TXT      then %i(data)
+    def all_attriubute_names
+      RECORD_FIELDS.values.flatten.uniq
+    end
+
+    def redefine_attributes(type: @record_set&.type)
+      required_attrs = attribute_names(type: type)
+
+      all_attriubute_names.each do |attr|
+        inst_var_sym = :"@#{attr}"
+        setter_sym = "#{attr}="
+
+        if required_attrs.include? attr
+          define_singleton_method(attr) { instance_variable_get(inst_var_sym) }
+
+          define_singleton_method(setter_sym) do |value|
+            instance_variable_set(inst_var_sym, value)
+            @record_set&.update
+          end
+        else
+          remove_instance_variable(inst_var_sym) if instance_variable_defined?(inst_var_sym)
+          singleton_class.class_eval do
+            undef_method attr, setter_sym if respond_to?(setter_sym)
+          end
+        end
       end
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
   end
 end
