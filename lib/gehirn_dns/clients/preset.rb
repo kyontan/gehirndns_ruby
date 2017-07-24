@@ -11,7 +11,7 @@ module GehirnDns
     end
 
     def prev_version
-      version = http_get "../../versions/#{@next_version_id}"
+      version = http_get "../../versions/#{@prev_version_id}"
       path = resource_path + '../../'
       Version.new(version, client: @client, base_path: path)
     end

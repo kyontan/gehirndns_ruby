@@ -31,7 +31,7 @@ module GehirnDns
 
       redefine_attributes
 
-      @record_set << self
+      @record_set << self if @record_set
     end
 
     def to_h
