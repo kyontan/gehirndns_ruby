@@ -67,6 +67,8 @@ module GehirnDns
         raise ForbiddenError, "Expects API key doesn't have a permission to request"
       when 404
         raise NotFoundError.new(path, body)
+      when 408
+        raise ReuqestTimeoutError.new(path, body)
       else
         raise RequestError.new(path, body)
       end

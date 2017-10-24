@@ -34,4 +34,7 @@ module GehirnDns
 
   class RequestToDeletedError < RequestError
   end
+
+  class RequestTimeoutError < RequestError
+  end
 end
