@@ -17,10 +17,10 @@ module GehirnDns
     DEFAULT_USER_AGENT = "gehirndns-ruby/#{VERSION}"
 
     def initialize(options = {})
-      @base_uri = ::URI.parse(options[:base_uri] || DEFAULT_BASE_URL)
+      @base_uri = ::URI.parse(options[:base_uri] || ENV.fetch('GEHIRN_DNS_BASE_URL', DEFAULT_BASE_URL))
       @token = options[:token] || ENV.fetch('GEHIRN_DNS_API_TOKEN')
       @secret = options[:secret] || ENV.fetch('GEHIRN_DNS_API_SECRET')
-      @user_agent = options[:user_agent] || DEFAULT_USER_AGENT
+      @user_agent = options[:user_agent] || ENV.fetch('GEHIRN_DNS_USER_AGENT', DEFAULT_USER_AGENT)
     end
 
     def get(path)
