@@ -44,7 +44,7 @@ module GehirnDns
     end
 
     def inspect
-      %Q(#<#{self.class}:#{object_id} @base_uri=#{@base_uri.inspect}, @secret=<HIDDEN>, @token=<HIDDEN>, @user_agent="#{@user_agent.inspect}">)
+      %Q(#<#{self.class}:#{object_id} @base_uri=#{@base_uri.inspect}, @secret=<HIDDEN>, @token=<HIDDEN>, @user_agent=#{@user_agent.inspect}>)
     end
 
     private
