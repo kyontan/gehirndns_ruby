@@ -4,17 +4,18 @@ require 'net/http'
 require 'json'
 
 require 'gehirn_dns/resource'
-require 'gehirn_dns/clients/preset'
-require 'gehirn_dns/clients/record'
-require 'gehirn_dns/clients/record_set'
-require 'gehirn_dns/clients/zone'
-require 'gehirn_dns/clients/version'
+require 'gehirn_dns/resource/preset'
+require 'gehirn_dns/resource/record'
+require 'gehirn_dns/resource/record_set'
+require 'gehirn_dns/resource/version'
+require 'gehirn_dns/resource/zone'
+require 'gehirn_dns/version'
 
 module GehirnDns
   class Client
     attr_accessor :base_uri, :token, :secret
 
-    DEFAULT_USER_AGENT = "gehirndns-ruby/#{VERSION}"
+    DEFAULT_USER_AGENT = "gehirndns-ruby/#{::GehirnDns::VERSION}"
 
     def initialize(options = {})
       @base_uri = ::URI.parse(options[:base_uri] || ENV.fetch('GEHIRN_DNS_BASE_URL', DEFAULT_BASE_URL))
