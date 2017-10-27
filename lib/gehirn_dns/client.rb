@@ -70,6 +70,8 @@ module GehirnDns
         raise NotFoundError.new(path, body)
       when 408
         raise ReuqestTimeoutError.new(path, body)
+      when 500..599
+        raise RequestError.new(path, body)
       else
         raise RequestError.new(path, body)
       end
