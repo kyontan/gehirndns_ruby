@@ -103,8 +103,6 @@ module GehirnDns
 
       request_path = Pathname(@base_uri.path) + path.to_s
 
-      $stderr.puts "#{method.upcase} #{request_path}, #{body}"
-
       request = request_class_for(method).new(request_path.to_s)
 
       if body
