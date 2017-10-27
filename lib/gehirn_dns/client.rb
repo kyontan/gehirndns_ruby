@@ -53,7 +53,7 @@ module GehirnDns
     def execute(method, path, body = nil)
       response = request(method, path, body)
 
-      body = if response.header['Content-Type'].start_with? 'application/json'
+      body = if response.header['Content-Type']&.start_with? 'application/json'
                JSON.parse(response.body, symbolize_names: true)
              else
                response.body
