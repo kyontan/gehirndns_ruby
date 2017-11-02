@@ -62,6 +62,7 @@ module GehirnDns
       begin
         response = http_post '../records', to_h
         @id = response[:id]
+        @name = response[:name]
       rescue => e # failed to add record set, revert
         @version = nil
         @client = nil
@@ -124,7 +125,8 @@ module GehirnDns
     end
 
     def update
-      http_put '.', to_h if @client && @version
+      response = http_put '.', to_h if @client && @version
+      @name = response[:name]
       self
     end
 
