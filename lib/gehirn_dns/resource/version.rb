@@ -2,7 +2,13 @@
 
 module GehirnDns
   class Version < Resource
-    attr_reader :id, :name, :editable, :created_at, :last_modified_at
+    attr_reader :id, :name, :editable, :created_at, :last_modified_at, :zone
+
+    def initialize(attrs = {}, zone:, client: nil, base_path: '')
+      @zone = zone
+
+      super(attrs, client: client, base_path: base_path)
+    end
 
     # TODO: not fqdn matching
     def record_sets(name: nil, type: nil)

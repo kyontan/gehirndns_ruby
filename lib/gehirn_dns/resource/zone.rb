@@ -21,7 +21,7 @@ module GehirnDns
 
     def current_version
       response = http_get "versions/#{current_version_id}"
-      Version.new(response, client: @client, base_path: resource_path)
+      Version.new(response, zone: self, client: @client, base_path: resource_path)
     end
 
     def current_record_sets(**args)
@@ -34,7 +34,7 @@ module GehirnDns
 
     def versions
       response = http_get 'versions'
-      response.map { |version| Version.new(version, client: @client, base_path: resource_path) }.sort_by!(&:last_modified_at)
+      response.map { |version| Version.new(version, zone: self, client: @client, base_path: resource_path) }.sort_by!(&:last_modified_at)
     end
 
     def presets
