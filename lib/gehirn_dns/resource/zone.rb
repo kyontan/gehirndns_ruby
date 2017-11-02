@@ -7,8 +7,14 @@ module GehirnDns
       response.map { |zone| Zone.new(zone, client: self, base_path: '') }
     end
 
-    def zone(name:)
-      zone = zones.find { |z| z.name == name }
+    def zone(id: nil, name: nil)
+      if id
+        # name is ignored
+        response = get "zones/#{id}"
+        zone = Zone.new(response, client: self, base_path: '')
+      else
+        zone = zones.find { |z| z.name == name }
+      end
 
       raise NotFoundError if zone.nil?
 

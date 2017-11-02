@@ -20,8 +20,14 @@ module GehirnDns
         .select { |record_set| (name.nil? || record_set.name == name) && (type.nil? || record_set.type == type) }
     end
 
-    def record_set(name:, type:)
-      record_sets(name: name, type: type).first
+    def record_set(id: nil, name: nil, type: nil)
+      if id
+        # name and type are ignored
+        respnose = http_get "records/#{id}"
+        RecordSet.new(respnose, editable: @editable, version: self, client: @client, base_path: resource_path)
+      else
+        record_sets(name: name, type: type).first
+      end
     end
 
     def create(name:, base: nil)
