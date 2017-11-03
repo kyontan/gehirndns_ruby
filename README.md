@@ -1,4 +1,6 @@
-# `gehirndns-ruby`
+# gehirndns-ruby
+
+[![Gem Version](https://badge.fury.io/rb/gehirn_dns.svg)](https://badge.fury.io/rb/gehirn_dns)
 
 An API Client of [Gehirn DNS](https://www.gehirn.jp/gis/dns.html) for Ruby
 
