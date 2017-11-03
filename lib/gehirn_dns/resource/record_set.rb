@@ -35,20 +35,20 @@ module GehirnDns
 
     def name=(name)
       @name = name
-      update
+      update_if_member_of_version
     end
 
     def alias_to=(alias_to)
       @alias_to = alias_to
       @enable_alias = true
       @records = []
-      update
+      update_if_member_of_version
     end
 
     def ttl=(ttl)
       raise StandardError, "alias record can't set ttl" if @enable_alias
       @ttl = ttl
-      update
+      update_if_member_of_version
     end
 
     def version=(version)
@@ -85,7 +85,7 @@ module GehirnDns
       @records << record
 
       begin
-        update
+        update_if_member_of_version || self
       rescue StandardError => e # failed to add record, revert
         @records.delete(record)
         record.record_set = nil
@@ -101,7 +101,7 @@ module GehirnDns
       @records = records.map { |r| Record.new(r, record_set: self) }
       @enable_alias = false
 
-      update
+      update_if_member_of_version
     end
 
     def to_h
@@ -117,7 +117,8 @@ module GehirnDns
     end
 
     def update
-      response = http_put '.', to_h if @client && @version
+      raise UnrequestableError, "record set doen't have a client" unless @client
+      response = http_put '.', to_h
       @name = response[:name]
       self
     end
@@ -135,6 +136,10 @@ module GehirnDns
     end
 
     protected
+
+    def update_if_member_of_version
+      update if @version
+    end
 
     def plulal_name
       'records'
