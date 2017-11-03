@@ -72,9 +72,8 @@ module GehirnDns
           end
         else
           remove_instance_variable(inst_var_sym) if instance_variable_defined?(inst_var_sym)
-          singleton_class.class_eval do
-            undef_method attr, setter_sym if respond_to?(setter_sym)
-          end
+          singleton_class.class_eval { undef_method setter_sym } if respond_to?(setter_sym)
+          singleton_class.class_eval { undef_method attr } if respond_to?(attr)
         end
       end
     end
