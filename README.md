@@ -7,7 +7,6 @@ An API Client of [Gehirn DNS](https://www.gehirn.jp/gis/dns.html) for Ruby
 ## Installation
 
 Add this line to your application's Gemfile:
-(*This way can't use now, I'll publish this to rubygems on nearby 2017-08-01)
 
 ```ruby
 gem 'gehirn_dns'
