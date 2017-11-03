@@ -2,7 +2,7 @@
 
 module GehirnDns
   class RecordSet < Resource
-    attr_reader :id, :type, :enable_alias, :editable, :version, :name, :alias_to, :ttl, :records
+    attr_reader :id, :type, :enable_alias, :editable, :version, :name, :alias_to, :ttl
 
     include Enumerable
 
@@ -72,11 +72,11 @@ module GehirnDns
 
     # append record
     def <<(record)
+      record = Record.new(record) unless record.is_a? Record
+
       return self if @records.include?(record) || equal?(record.record_set)
 
-      record = Record.new(record) unless record.is_a? RecordSet
-
-      raise ArgumentError, 'record is already member of a RecordSet' if record.record_set != self
+      raise ArgumentError, 'record is already member of a RecordSet' if record.record_set && record.record_set != self
 
       record.record_set = self
 
@@ -91,6 +91,10 @@ module GehirnDns
         record.record_set = nil
         raise e
       end
+    end
+
+    def records
+      @records.clone
     end
 
     def records=(records)
