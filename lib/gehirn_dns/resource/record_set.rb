@@ -126,6 +126,7 @@ module GehirnDns
     def delete
       raise UnrequestableError, "record set doen't have a version" unless @client && @version
       http_delete '.'
+      self
     end
 
     def delete_record(record)
@@ -133,6 +134,7 @@ module GehirnDns
       raise ValidationError, "Can't delete only record of record set" if @records.size == 1
       @records.delete(record)
       update
+      record
     end
 
     protected

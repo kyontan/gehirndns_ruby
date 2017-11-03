@@ -43,6 +43,7 @@ module GehirnDns
 
     def delete
       http_delete '.'
+      self
     end
 
     def activate!
