@@ -43,6 +43,22 @@ module GehirnDns
       response.map { |version| Version.new(version, zone: self, client: @client, base_path: resource_path) }.sort_by!(&:last_modified_at)
     end
 
+    def version(id: nil, name: nil)
+      raise ArgumentError, "passing both id and name is not allowed" if id && name
+      raise ArgumentError, "missing keyword: id or name" if !id && !name
+
+      if id
+        response = http_get "versions/#{id}"
+        version = Version.new(response, zone: self, client: @client, base_path: resource_path)
+      else
+        version = versions.find { |v| v.name == name }
+      end
+
+      raise NotFoundError if version.nil?
+
+      version
+    end
+
     def presets
       response = http_get 'presets'
       response.map { |preset| Preset.new(preset, client: @client, base_path: resource_path) }.sort_by!(&:applied_at)
