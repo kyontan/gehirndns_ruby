@@ -42,7 +42,7 @@ module GehirnDns
     end
 
     def attribute_names(type: @record_set&.type)
-      return RECORD_FIELDS.values.flatten unless RECORD_FIELDS.key? type
+      return RECORD_FIELDS.values.flatten.uniq unless RECORD_FIELDS.key? type
       RECORD_FIELDS[type]
     end
 
