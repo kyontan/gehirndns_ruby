@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'The Gehirn DNS API client for Ruby'
   spec.description   = 'The Gehirn DNS API client for Ruby'
-  spec.homepage      = 'https://github.com/kyontan/gehirn_dns'
+  spec.homepage      = 'https://github.com/kyontan/gehirndns_ruby'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
