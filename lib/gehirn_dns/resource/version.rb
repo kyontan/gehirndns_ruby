@@ -21,8 +21,10 @@ module GehirnDns
     end
 
     def record_set(id: nil, name: nil, type: nil)
+      raise ArgumentError, "passing both id and name is not allowed" if id && (name || type)
+      raise ArgumentError, "missing keyword: one of id, name, type is required" if !id && !(name || type)
+
       if id
-        # name and type are ignored
         respnose = http_get "records/#{id}"
         RecordSet.new(respnose, editable: @editable, version: self, client: @client, base_path: resource_path)
       else

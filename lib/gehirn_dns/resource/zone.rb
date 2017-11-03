@@ -8,8 +8,10 @@ module GehirnDns
     end
 
     def zone(id: nil, name: nil)
+      raise ArgumentError, "passing both id and name is not allowed" if id && name
+      raise ArgumentError, "missing keyword: id or name" if !id && !name
+
       if id
-        # name is ignored
         response = get "zones/#{id}"
         zone = Zone.new(response, client: self, base_path: '')
       else
