@@ -2,8 +2,7 @@
 
 module GehirnDns
   class Record
-    attr_reader :id
-    attr_accessor :record_set
+    attr_reader :id, :record_set
 
     RECORD_TYPES = %i(A AAAA CNAME MX NS SRV TXT).freeze
     RECORD_FIELDS = {
@@ -39,11 +38,11 @@ module GehirnDns
     end
 
     def attributes(type: @record_set&.type)
-      Hash[attribute_names(type: type).map{|attr| [attr, instance_variable_get(:"@#{attr}")] }]
+      Hash[attribute_names(type: type).map { |attr| [attr, instance_variable_get(:"@#{attr}")] }]
     end
 
     def attribute_names(type: @record_set&.type)
-      return RECORD_FIELDS.values.flatten unless RECORD_FIELDS.has_key? type
+      return RECORD_FIELDS.values.flatten unless RECORD_FIELDS.key? type
       RECORD_FIELDS[type]
     end
 

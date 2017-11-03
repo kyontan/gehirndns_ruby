@@ -2,8 +2,7 @@
 
 module GehirnDns
   class RecordSet < Resource
-    attr_reader :id, :type, :enable_alias, :editable, :version
-    attr_accessor :name, :alias_to, :ttl, :records
+    attr_reader :id, :type, :enable_alias, :editable, :version, :name, :alias_to, :ttl, :records
 
     include Enumerable
 
@@ -63,34 +62,23 @@ module GehirnDns
         response = http_post '../records', to_h
         @id = response[:id]
         @name = response[:name]
-      rescue => e # failed to add record set, revert
+      rescue StandardError => e # failed to add record set, revert
         @version = nil
         @client = nil
         @base_path = nil
         raise e
       end
-
-      self
     end
 
     # append record
     def <<(record)
-      return self if @records.include?(record) || self.equal?(record.record_set)
+      return self if @records.include?(record) || equal?(record.record_set)
 
-      record =  case record
-                when Hash
-                  Record.new(record, record_set: self)
-                when Record
-                  if record.record_set.nil?
-                    record.record_set = self
-                  elsif record.record_set != self
-                    raise ArgumentError, "record is already member of a RecordSet"
-                  end
+      record = Record.new(record) unless record.is_a? RecordSet
 
-                  record
-                else
-                  raise ArgumentError
-                end
+      raise ArgumentError, 'record is already member of a RecordSet' if record.record_set != self
+
+      record.record_set = self
 
       @enable_alias = false
       @alias_to = nil
@@ -98,7 +86,7 @@ module GehirnDns
 
       begin
         update
-      rescue => e # failed to add record, revert
+      rescue StandardError => e # failed to add record, revert
         @records.delete(record)
         record.record_set = nil
         raise e
@@ -136,7 +124,7 @@ module GehirnDns
     end
 
     def delete_record(record)
-      raise ArgumentError, "record isn't member of record set" unless @records.include? record || self.equal?(record.record_set)
+      raise ArgumentError, "record isn't member of record set" unless @records.include?(record) || equal?(record.record_set)
       raise ValidationError, "Can't delete only record of record set" if @records.size == 1
       @records.delete(record)
       update

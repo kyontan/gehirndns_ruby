@@ -21,8 +21,8 @@ module GehirnDns
     end
 
     def record_set(id: nil, name: nil, type: nil)
-      raise ArgumentError, "passing both id and name is not allowed" if id && (name || type)
-      raise ArgumentError, "missing keyword: one of id, name, type is required" if !id && !(name || type)
+      raise ArgumentError, 'passing both id and name is not allowed' if id && (name || type)
+      raise ArgumentError, 'missing keyword: one of id, name, type is required' if !id && !(name || type)
 
       if id
         respnose = http_get "records/#{id}"
@@ -61,7 +61,7 @@ module GehirnDns
       payload = {
         applied_at: applied_at ? applied_at.getutc.strftime('%FT%TZ') : nil,
         name: name,
-        next_version_id: @id
+        next_version_id: @id,
       }.compact
 
       response = http_post '../../presets', payload

@@ -13,7 +13,8 @@ require 'gehirn_dns/version'
 
 module GehirnDns
   class Client
-    attr_accessor :base_uri, :token, :secret
+    attr_reader :base_uri
+    attr_accessor :token, :secret
 
     DEFAULT_USER_AGENT = "gehirndns-ruby/#{::GehirnDns::VERSION}"
 
@@ -45,11 +46,12 @@ module GehirnDns
     end
 
     def inspect
-      %Q(#<#{self.class}:#{object_id} @base_uri=#{@base_uri.inspect}, @secret=<HIDDEN>, @token=<HIDDEN>, @user_agent=#{@user_agent.inspect}>)
+      %(#<#{self.class}:#{object_id} @base_uri=#{@base_uri.inspect}, @secret=<HIDDEN>, @token=<HIDDEN>, @user_agent=#{@user_agent.inspect}>)
     end
 
     private
 
+    # rubocop:disable Metrics/MethodLength
     def execute(method, path, body = nil)
       response = request(method, path, body)
 
@@ -76,6 +78,7 @@ module GehirnDns
         raise RequestError.new(path, body)
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     def request_class_for(method)
       case method.downcase.to_sym

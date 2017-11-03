@@ -8,8 +8,8 @@ module GehirnDns
     end
 
     def zone(id: nil, name: nil)
-      raise ArgumentError, "passing both id and name is not allowed" if id && name
-      raise ArgumentError, "missing keyword: id or name" if !id && !name
+      raise ArgumentError, 'passing both id and name is not allowed' if id && name
+      raise ArgumentError, 'missing keyword: id or name' if !id && !name
 
       if id
         response = get "zones/#{id}"
@@ -46,8 +46,8 @@ module GehirnDns
     end
 
     def version(id: nil, name: nil)
-      raise ArgumentError, "passing both id and name is not allowed" if id && name
-      raise ArgumentError, "missing keyword: id or name" if !id && !name
+      raise ArgumentError, 'passing both id and name is not allowed' if id && name
+      raise ArgumentError, 'missing keyword: id or name' if !id && !name
 
       if id
         response = http_get "versions/#{id}"

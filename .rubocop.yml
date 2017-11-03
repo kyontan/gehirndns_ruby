@@ -14,6 +14,12 @@ Metrics/AbcSize:
   Enabled: false
 Style/ClassAndModuleChildren:
   Enabled: false
+Style/TrailingCommaInLiteral:
+  EnforcedStyleForMultiline: comma
+Metrics/PerceivedComplexity:
+  Max: 9
+Metrics/CyclomaticComplexity:
+  Max: 9
 AllCops:
   Exclude:
     - 'Rakefile'
